@@ -16,6 +16,12 @@ import { AboutMobileComponent } from './cards/about-mobile/about-mobile.componen
 import { AboutDesktopComponent } from './cards/about-desktop/about-desktop.component';
 import { NgxdModule } from '@ngxd/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { StoreModule } from '@ngrx/store';
+import { reducers, metaReducers } from './reducers';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { environment } from '../environments/environment';
+import { EffectsModule } from '@ngrx/effects';
+import { WeatherEffects } from './effects/weather.effects';
 
 @NgModule({
   declarations: [
@@ -48,7 +54,16 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     MatSortModule,
     NgxdModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    StoreModule.forRoot(reducers, {
+      metaReducers, 
+      runtimeChecks: {
+        strictStateImmutability: true,
+        strictActionImmutability: true,
+      }
+    }),
+    !environment.production ? StoreDevtoolsModule.instrument() : [],
+    EffectsModule.forRoot([WeatherEffects])
   ],
   providers: [],
   bootstrap: [AppComponent]
